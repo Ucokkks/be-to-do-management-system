@@ -20,7 +20,7 @@ configDotenv();
  * Get port from environment and store in Express.
  */
 
-console.log(process.env.PORT || "Gaada PORT di env ATAU env tidak terdeteksi");
+
 var port = normalizePort(process.env.PORT || '4000');
 app.set('port', port);
 
@@ -29,7 +29,6 @@ app.set('port', port);
  */
 
 var server = http.createServer(app);
-console.info(`Server running on http://localhost:${port}`);
 
 /**
  * Listen on provided port, on all network interfaces.
