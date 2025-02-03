@@ -7,5 +7,11 @@ node_modules
 # Eslint Configuration
 .eslintrc.json
 
-# Prettier Configuration
+# Prisma
+prisma
+
+# prettier
 .prettierrc.json
+
+# eslint config
+eslint.config.mjs
