@@ -91,23 +91,24 @@ router.put('/update/:id', async function (req, res) {
 // Delete User
 router.delete('/delete/:id', async function (req, res) {
   const { id } = req.params;
-  const userExist = await prisma.user.delete({
-    where: {
-      id: parseInt(id),
-    },
-  });
+  const userExist = await prisma.user
+    .delete({
+      where: {
+        id: parseInt(id),
+      },
+    })
+    .res.send(userExist)
+    .status(200);
   userExist === null
     ? res.json(`Data user dengan id ${id} tidak ada atau kosong`)
-    : async () => {
-        const user = await prisma.user.delete(
-          {
-            where: {
-              id: parseInt(id),
-            },
+    : (async () => {
+        const user = await prisma.user.delete({
+          where: {
+            id: parseInt(id),
           },
-          res.json(user)
-        );
-      };
+        });
+        res.send(user).status(200);
+      })();
 });
 
 module.exports = router;
