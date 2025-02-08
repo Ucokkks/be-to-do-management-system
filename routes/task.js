@@ -33,19 +33,23 @@ router.get('/:id', async function (req, res) {
 //Create Task
 router.post('/create', async function (req, res) {
   try {
-    const { task, desc, priority, deadline } = req.body;
+    const { title, desc, priority, deadline, created_by } = req.body;
     const tasks = await prisma.task.create({
       data: {
-        task: task,
+        title: title,
         desc: desc,
         priority: priority,
         deadline: deadline,
+        created_by: created_by,
       },
     });
     return res.send(tasks);
   } catch (error) {
     console.log(error);
-    res.status(500).send('error create task');
+    res.status(500).send({
+      msg: 'error create task',
+      error: error,
+    });
   }
 });
 
@@ -53,16 +57,17 @@ router.post('/create', async function (req, res) {
 router.put('/update/:id', async function (req, res) {
   try {
     const { id } = req.params;
-    const { task, desc, priority, deadline } = req.body;
-    const tasks = await prisma.user.update({
+    const { title, desc, priority, deadline, created_by } = req.body;
+    const tasks = await prisma.task.update({
       where: {
         id: parseInt(id),
       },
       data: {
-        task: task,
+        title: title,
         desc: desc,
         priority: priority,
         deadline: deadline,
+        created_by: created_by,
       },
     });
     res.send(tasks);

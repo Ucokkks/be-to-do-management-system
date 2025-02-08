@@ -9,10 +9,13 @@ const bcrypt = require('bcrypt');
 router.get('/', async function (req, res) {
   try {
     const users = await prisma.user.findMany();
-    res.json(users);
+    if (users.length === 0 || users === null || users === undefined) {
+      return res.status(500).send('Data user tidak ada atau kosong');
+    }
+    return res.send(users);
   } catch (error) {
     console.log(error);
-    res.status(500).send('error get user by id');
+    return res.status(500).send('error get user by id');
   }
 });
 
@@ -25,71 +28,86 @@ router.get('/:id', async function (req, res) {
         id: parseInt(id),
       },
     });
+    if (user === null || user === undefined) {
+      return res
+        .status(500)
+        .res.send(`Data user dengan id ${id} tidak ada atau kosong`);
+    }
     res.json(user);
   } catch (error) {
     console.log(error);
-    res.status(500).send('error get user by id');
+    return res.status(500).send('error get user by id');
   }
 });
 
 // Create User
 router.post('/create', async function (req, res) {
-  try {
-    const { name, email, password } = req.body;
-    const hashPassword = await bcrypt.hash(password, 10);
-    const stringPassword = JSON.stringify(hashPassword);
-    const users = await prisma.user.create({
-      data: {
-        username: name,
-        email,
-        password: stringPassword,
-      },
-    });
-    res.send(users);
-  } catch (error) {
-    console.error(error);
-    res.status(500).send('error membuat user');
-  }
+  const { name, email, password } = req.body;
+  name === ''
+    ? res.json('Please the name field')
+    : email === ''
+      ? res.json('Please the email field')
+      : password === ''
+        ? res.json('Please the password field')
+        : (async () => {
+            const hashPassword = await bcrypt.hash(password, 10);
+            const user = await prisma.user.create({
+              data: {
+                username: name,
+                email,
+                password: hashPassword,
+              },
+            });
+            res.send(user);
+          })();
 });
 
 // Update User
 router.put('/update/:id', async function (req, res) {
-  try {
-    const { id } = req.params;
-    const { name, email, password } = req.body;
-    const hashPassword = await bcrypt.hash(password, 10);
-    const stringPassword = JSON.stringify(hashPassword);
-    const user = await prisma.user.update({
-      where: {
-        id: parseInt(id),
-      },
-      data: {
-        username: name,
-        email,
-        password: stringPassword,
-      },
-    });
-    res.send(user);
-  } catch (error) {
-    console.error(error);
-    res.status(500).send('error update user');
-  }
+  const { id } = req.params;
+  const { name, email, password } = req.body;
+  const hashPassword = await bcrypt.hash(password, 10);
+  name === ''
+    ? res.json('Please fill the name field')
+    : email === ''
+      ? res.json('Please fill the email field')
+      : password === ''
+        ? res.json('Please fill the password field')
+        : (async () => {
+            const user = await prisma.user.update({
+              where: {
+                id: parseInt(id),
+              },
+              data: {
+                username: name,
+                email,
+                password: hashPassword,
+              },
+            });
+            res.send(user);
+          })();
 });
 
 // Delete User
 router.delete('/delete/:id', async function (req, res) {
-  try {
-    const { id } = req.params;
-    const user = await prisma.user.delete({
-      where: {
-        id: parseInt(id),
-      },
-    });
-    res.send(user);
-  } catch (error) {
-    console.error(error);
-    res.status(500).send('error delete user');
-  }
+  const { id } = req.params;
+  const userExist = await prisma.user.delete({
+    where: {
+      id: parseInt(id),
+    },
+  });
+  userExist === null
+    ? res.json(`Data user dengan id ${id} tidak ada atau kosong`)
+    : async () => {
+        const user = await prisma.user.delete(
+          {
+            where: {
+              id: parseInt(id),
+            },
+          },
+          res.json(user)
+        );
+      };
 });
 
 module.exports = router;
