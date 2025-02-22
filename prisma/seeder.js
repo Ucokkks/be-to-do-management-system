@@ -8,7 +8,7 @@ async function domain() {
     for (let i = 0; i < 10; i++) {
         const username = faker.internet.userName();
         const email = faker.internet.email();
-        const password = await bcrypt.hash('password123', 10); // Hash password
+        const password = await bcrypt.hash('password123', 10); 
 
         await prisma.user.create({
             data: {
