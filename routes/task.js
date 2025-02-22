@@ -46,10 +46,7 @@ router.post('/create', async function (req, res) {
     return res.send(tasks);
   } catch (error) {
     console.log(error);
-    res.status(500).send({
-      msg: 'error create task',
-      error: error,
-    });
+    res.status(500).send('error create task');
   }
 });
 

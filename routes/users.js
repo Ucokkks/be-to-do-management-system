@@ -9,9 +9,6 @@ const bcrypt = require('bcrypt');
 router.get('/', async function (req, res) {
   try {
     const users = await prisma.user.findMany();
-    if (users.length === 0 || users === null || users === undefined) {
-      return res.status(500).send('Data user tidak ada atau kosong');
-    }
     return res.send(users);
   } catch (error) {
     console.log(error);
@@ -28,11 +25,6 @@ router.get('/:id', async function (req, res) {
         id: parseInt(id),
       },
     });
-    if (user === null || user === undefined) {
-      return res
-        .status(500)
-        .res.send(`Data user dengan id ${id} tidak ada atau kosong`);
-    }
     res.json(user);
   } catch (error) {
     console.log(error);
@@ -91,14 +83,11 @@ router.put('/update/:id', async function (req, res) {
 // Delete User
 router.delete('/delete/:id', async function (req, res) {
   const { id } = req.params;
-  const userExist = await prisma.user
-    .delete({
-      where: {
-        id: parseInt(id),
-      },
-    })
-    .res.send(userExist)
-    .status(200);
+  const userExist = await prisma.user.findUnique({
+    where: {
+      id: parseInt(id),
+    },
+  });
   userExist === null
     ? res.json(`Data user dengan id ${id} tidak ada atau kosong`)
     : (async () => {
@@ -107,7 +96,7 @@ router.delete('/delete/:id', async function (req, res) {
             id: parseInt(id),
           },
         });
-        res.send(user).status(200);
+        res.status(200).send(user);
       })();
 });
 
