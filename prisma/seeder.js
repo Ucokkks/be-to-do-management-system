@@ -6,7 +6,7 @@ const prisma = new PrismaClient();
 async function domain() {
     // Seed Users
     for (let i = 0; i < 10; i++) {
-        const username = faker.internet.userName();
+        const username = faker.person.userName();
         const email = faker.internet.email();
         const password = await bcrypt.hash('password123', 10); 
 
