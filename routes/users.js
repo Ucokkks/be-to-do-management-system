@@ -5,6 +5,9 @@ const prisma = new PrismaClient();
 const bcrypt = require('bcrypt');
 // const { stringify } = require('jade/lib/utils');
 
+
+
+
 //Gett All Users
 router.get('/', async function (req, res) {
   try {
@@ -34,7 +37,7 @@ router.get('/:id', async function (req, res) {
 
 // Create User
 router.post('/create', async function (req, res) {
-  const { name, email, password } = req.body;
+  const { name , email , password } = req.body;
   name === ''
     ? res.json('Please the name field')
     : email === ''
