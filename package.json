@@ -23,12 +23,10 @@
     "jade": "^0.29.0",
     "morgan": "~1.9.1",
     "pg": "^8.13.1",
-    "stringify": "^5.2.0",
-    "@faker-js/faker": "^9.5.0"
+    "stringify": "^5.2.0"
   },
   "devDependencies": {
     "@eslint/js": "^9.19.0",
-    "@faker-js/faker": "^9.5.0",
     "eslint": "^9.19.0",
     "globals": "^15.14.0",
     "husky": "^9.1.7",
